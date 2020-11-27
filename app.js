@@ -33,13 +33,24 @@ var UIController = (function (){
 // GLOBAL APP CONTROLLER
 var controller = (function (budgetCtrl, UICtrl) {
 
-    var DOM = UICtrl.getDOMstrings();
+    var setupEventListeners = function () {
+
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.inputButton).addEventListener('click', ctrlAddItem);
+
+        document.addEventListener('keypress', function (event) {
+            if(event.key === 'Enter') {
+                ctrlAddItem();
+            }
+        });
+
+    };
 
     var ctrlAddItem = function () {
 
         // 1. get the input data
         var input = UICtrl.getinput();
-        console.log(input);
 
         // 2. add the item to the budget controller
 
@@ -51,14 +62,14 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     };
 
-    document.querySelector(DOM.inputButton).addEventListener('click', ctrlAddItem);
-
-    document.addEventListener('keypress', function (event) {
-
-        if(event.key === 'Enter') {
-            ctrlAddItem();
+    return {
+        init: function () {
+            console.log('the application has started.');
+            setupEventListeners();
         }
-
-    });
+    };
 
 })(budgetController, UIController);
+
+//the most important line of code LOL
+controller.init();
