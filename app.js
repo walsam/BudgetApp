@@ -59,6 +59,22 @@ var budgetController = (function () {
 
         },
 
+        deleteItem: function (type, id) {
+
+            var ids, index;
+
+            ids = data.allItems[type].map(function(current) {
+                return current.id;
+            });
+
+            index = ids.indexOf(id);
+
+            if (index !== -1) {
+                data.allItems[type].splice(index, 1);
+            }
+
+        },
+
         calculateBudget: function () {
 
             // calculate Total income and expenses
@@ -83,6 +99,10 @@ var budgetController = (function () {
                 totalExp: data.totals.exp,
                 percentage: data.percentage
             };
+        },
+
+        testing: function() {
+            console.log(data);
         }
     }
 
@@ -101,7 +121,8 @@ var UIController = (function (){
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
     }
     return {
         getinput: function () {
@@ -119,7 +140,7 @@ var UIController = (function (){
             if(type === 'inc') {
                 element = DOMstrings.incomeContainer;
 
-                html = '<div class="item clearfix" id="income-%id%">' +
+                html = '<div class="item clearfix" id="inc-%id%">' +
                     '<div class="item__description">%description%</div>' +
                     '<div class="right clearfix">' +
                     '<div class="item__value">%value%</div>' +
@@ -129,7 +150,7 @@ var UIController = (function (){
             } else if(type === 'exp') {
                 element = DOMstrings.expenseContainer;
 
-                html = '<div class="item clearfix" id="expense-%id%">' +
+                html = '<div class="item clearfix" id="exp-%id%">' +
                     '<div class="item__description">%description%</div>' +
                     '<div class="right clearfix">' +
                     '<div class="item__value">%value%</div>' +
@@ -199,6 +220,8 @@ var controller = (function (budgetCtrl, UICtrl) {
             }
         });
 
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+
     };
 
     var updateBudget = function () {
@@ -236,6 +259,31 @@ var controller = (function (budgetCtrl, UICtrl) {
             updateBudget();
 
         }
+    };
+
+    var ctrlDeleteItem = function (event){
+
+        var itemID, splitID, type, ID;
+
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if (itemID) {
+
+            //inc-1
+            splitID = itemID.split('-');
+            type = splitID[0];
+            ID = parseInt(splitID[1]);
+
+            // 1. delete the item from the data structure
+            budgetCtrl.deleteItem(type, ID);
+
+            // 2. Delete the item from the UI
+
+            // 3. Update and show the new budget
+
+            // 4. Calculate and update percentages
+        }
+
     };
 
     return {
