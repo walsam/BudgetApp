@@ -295,6 +295,21 @@ var UIController = (function (){
             document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
         },
 
+        changedType: function() {
+
+            var fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' +
+                DOMstrings.inputDescription + ',' +
+                DOMstrings.inputValue);
+
+            nodeListForEach(fields, function(cur) {
+                cur.classList.toggle('red-focus');
+            });
+
+            document.querySelector(DOMstrings.inputButton).classList.toggle('red');
+
+        },
+
         getDOMstrings: function () {
             return DOMstrings;
         }
@@ -311,13 +326,15 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         var DOM = UICtrl.getDOMstrings();
 
-        document.querySelector(DOM.inputButton).addEventListener('click', ctrlAddItem);
-
         document.addEventListener('keypress', function (event) {
             if(event.key === 'Enter') {
                 ctrlAddItem();
             }
         });
+
+        document.querySelector(DOM.inputButton).addEventListener('click', ctrlAddItem);
+
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
 
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 
